@@ -1,0 +1,16 @@
+/* @config "../tailwind.config.js"; */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  button {
+    background-color: transparent;
+  }
+
+  #html5qr-code-full-region button {
+    font-weight: bold;
+    color: #1e40af;
+  }
+}
