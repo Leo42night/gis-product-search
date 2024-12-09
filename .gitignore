@@ -32,3 +32,4 @@ myapp.crt
 
 # database pushing data
 migrate.py
+gis-product-search-firebase-adminsdk.json
