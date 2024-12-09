@@ -14,6 +14,7 @@ import {
 import { db } from "../firebase-config";
 import { Product } from "../types/types";
 import { fetchProducts } from "../libs/firestore";
+import { useAuth } from "../context/AuthContext";
 
 interface StoreInfo {
   id: string;
@@ -41,6 +42,9 @@ const templateTransaction = {
 const now = new Date();
 
 const KelolaTransaksi: React.FC = () => {
+  const { isAuthenticated } = useAuth();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
   const [products, setProducts] = useState<Product[]>([]);
   const [stores, setStores] = useState<StoreInfo[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -54,7 +58,20 @@ const KelolaTransaksi: React.FC = () => {
   // untuk delete
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
   const [selectedTransactId, setSelectedTransactId] = useState<string | null>(null);
-  
+
+  // cek autentikasi
+  useEffect(() => {
+    // Simulasi pengecekan autentikasi
+    const checkAuthStatus = async () => {
+      // Tunggu sampai status autentikasi tersedia
+      setTimeout(() => {
+        setIsLoading(false); // Set loading selesai
+      }, 500); // Loading selama 0.5 detik
+    };
+
+    checkAuthStatus();
+  }, [isAuthenticated]);
+
   // Fungsi untuk mengambil data toko
   const fetchStores = async () => {
     try {
@@ -106,12 +123,12 @@ const KelolaTransaksi: React.FC = () => {
 
   // Fetch data saat komponen pertama kali dimuat
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchDataAllForTrans = async () => {
       await fetchProducts(setProducts);
       await fetchStores();
       await fetchTransactions();
     };
-    fetchData();
+    fetchDataAllForTrans();
   }, []);
 
   // Fungsi untuk menambah atau memperbarui transaksi
@@ -223,27 +240,38 @@ const KelolaTransaksi: React.FC = () => {
     setShowConfirmModal(true);
   };
 
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="spinner-border animate-spin rounded-full border-4 border-t-4 border-blue-500 w-16 h-16"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-2xl md:text-3xl font-semibold text-center mb-6">
-        Daftar Transaksi
-      </h1>
-
-      {/* Tombol Tambah Transaksi */}
-      <div className="mb-4 text-right">
-        <button
-          onClick={() => {
-            setNewTransaction({} as Transaction);
-            setShowButton(false);
-            setFormattedHarga("");
-            setShowModal(true);
-            setIsEdit(false);
-          }}
-          className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-        >
-          Tambah Transaksi
-        </button>
-      </div>
+      <h1 className="text-3xl font-semibold text-center">Daftar Transaksi</h1>
+      {isAuthenticated ? (
+        // Tombol Tambah Transaksi
+        <div className="mb-4 text-right">
+          <button
+            onClick={() => {
+              setNewTransaction({} as Transaction);
+              setShowButton(false);
+              setFormattedHarga("");
+              setShowModal(true);
+              setIsEdit(false);
+            }}
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+          >
+            Tambah Transaksi
+          </button>
+        </div>
+      ) : (
+        <p className="text-red-500 text-center mb-4">
+          Silakan login agar dapat akses tambah, edit & hapus transaksi 🙏.
+        </p>
+      )}
 
       {/* Tabel Transaksi */}
       <div className="overflow-x-auto">
@@ -262,9 +290,11 @@ const KelolaTransaksi: React.FC = () => {
               <th className="py-2 px-4 border-b text-left text-xs sm:text-sm text-gray-700">
                 Tanggal
               </th>
-              <th className="py-2 px-4 border-b text-left text-xs sm:text-sm text-gray-700">
-                Aksi
-              </th>
+              {isAuthenticated &&
+                <th className="py-2 px-4 border-b text-left text-xs sm:text-sm text-gray-700">
+                  Aksi
+                </th>
+              }
             </tr>
           </thead>
           <tbody>
@@ -286,20 +316,22 @@ const KelolaTransaksi: React.FC = () => {
                   <td className="py-2 px-4 border-b text-xs sm:text-sm">
                     {formatToCustomDate(transaction.tgl)}
                   </td>
-                  <td className="py-2 px-4 border-b text-xs sm:text-sm">
-                    <button
-                      onClick={() => editTransaction(transaction)}
-                      className="text-yellow-500 hover:text-yellow-700"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDeleteClick(transaction.id)}
-                      className="text-red-500 hover:text-red-700 ml-2"
-                    >
-                      Hapus
-                    </button>
-                  </td>
+                  {isAuthenticated &&
+                    <td className="py-2 px-4 border-b text-xs sm:text-sm">
+                      <button
+                        onClick={() => editTransaction(transaction)}
+                        className="text-yellow-500 hover:text-yellow-700"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDeleteClick(transaction.id)}
+                        className="text-red-500 hover:text-red-700 ml-2"
+                      >
+                        Hapus
+                      </button>
+                    </td>
+                  }
                 </tr>
               );
             })}

@@ -4,14 +4,26 @@ import { Product, Transaction } from "../types/types";
 
 interface fetchDataParams {
   prodId: string;
-  setProductName?: React.Dispatch<React.SetStateAction<string>>;
+  setProductName: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export const fetchData = async ({prodId, setProductName} : fetchDataParams): Promise<Transaction[]> => {
+export const fetchData = async ({ prodId, setProductName }: fetchDataParams): Promise<Transaction[] | number> => {
+  // keadaan input kosong
   if (!prodId) {
-    console.log("Produk ID tidak ditemukan");
-    return [];
+    console.log("Produk ID tidak diinputkan");
+    return 0;
   }
+  // Fetch produk details
+  const produkDoc = await getDocs(query(collection(db, "produk"), where("bar", "==", prodId)));
+  const produkData = produkDoc.docs[0]?.data();
+  
+  // keadaan produk tidak ditemukan di database
+  if (!produkData) {
+    console.log("Produk data not found");
+    return 1;
+  }
+
+  setProductName(produkData?.name);
 
   const q = query(collection(db, "transaksi"), where("prod_id", "==", prodId));
   const querySnapshot = await getDocs(q);
@@ -20,15 +32,6 @@ export const fetchData = async ({prodId, setProductName} : fetchDataParams): Pro
 
   for (const doc of querySnapshot.docs) {
     const data = doc.data();
-
-    // Fetch produk details
-    const produkDoc = await getDocs(query(collection(db, "produk"), where("bar", "==", prodId)));
-    const produkData = produkDoc.docs[0]?.data();
-
-    // masukkan nama ke kolom badge
-    if(setProductName) {
-      setProductName(produkData?.name);
-    }
 
     // Fetch toko details
     const tokoDoc = await getDocs(query(collection(db, "toko"), where("toko_id", "==", data.toko_id)));

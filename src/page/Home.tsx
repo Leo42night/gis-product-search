@@ -18,6 +18,7 @@ import { calculateDistance } from "../components/Tools";
 const DEFAULT_CENTER = JSON.parse(import.meta.env.VITE_CENTER);
 
 const Home = () => {
+
   const navigate = useNavigate();
 
   const { scannedValue, updateScannedValue } = useMyContext();
@@ -96,9 +97,14 @@ const Home = () => {
     debounce(async (bar: string, rad: number) => {
       const data = await fetchData({ prodId: bar, setProductName });
       console.log(data);
-      if (!data || data.length === 0) {
+      // 0 - produk tidak diinputkan sama sekali
+      if (data === 0) {
         setPois([]);
+        alert("Silahkan inputkan nomor produk");
+      }
 
+      // 1 - produk tidak ditemukan di database
+      else if (data === 1) {
         // Tambahkan konfirmasi jika produk tidak ditemukan
         const confirmAddProduct = window.confirm(
           `Produk dengan Code "${bar}" tidak ditemukan. Apakah Anda ingin menambahkan produk baru?`
@@ -112,13 +118,20 @@ const Home = () => {
         }
         return;
       }
-      setPois(data);
 
-      const filteredData = data.filter((poi) => {
-        const distance = calculateDistance(position, { lat: poi.lat, lng: poi.lng });
-        return distance <= rad;
-      });
-      setPois(filteredData);
+      // jika data transaksi ada
+      if (Array.isArray(data)) {
+        if (data.length === 0) {
+          alert("Data transaksi tidak ditemukan di database");
+          return;
+        }
+        setPois(data);
+        const filteredData = data.filter((poi) => {
+          const distance = calculateDistance(position, { lat: poi.lat, lng: poi.lng });
+          return distance <= rad;
+        });
+        setPois(filteredData);
+      }
     }, 300),
     [position]
   );
@@ -160,10 +173,7 @@ const Home = () => {
           <label htmlFor="productID" className="block text-gray-700 flex-shrink-0">
             Product ID:
           </label>
-          <div className="flex items-center justify-between me-6">
-            <span className={`${productName !== "" && "px-2.5 py-0.5"} bg-blue-100 text-blue-800 text-xs font-semibold rounded`}>
-              {productName}
-            </span>
+          <div className="flex items-center gap-2 justify-between me-6">
             <input
               id="productID"
               type="number"
@@ -172,6 +182,9 @@ const Home = () => {
               onChange={handleInputChange}
               className={`w-full md:w-auto px-4 py-2 border rounded-lg ${scannedValue !== null ? 'border-green-500 bg-green-100' : 'border-gray-300'}`}
             />
+            <span className={`${productName !== "" && "px-2.5 py-0.5"} bg-blue-100 text-blue-800 text-xs font-semibold rounded`}>
+              {productName}
+            </span>
           </div>
         </div>
 

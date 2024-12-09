@@ -10,9 +10,12 @@ import KelolaToko from './page/KelolaToko';
 import { MyProvider } from './context/MyContext';
 import Logo from './images/Logo.svg';
 import './globals.css';
+import { useAuth } from './context/AuthContext';
 
 function App() {
   const [isOpen, setIsOpen] = useState(false);
+  const { isAuthenticated, login } = useAuth();
+
 
   return (
     <MyProvider>
@@ -25,12 +28,15 @@ function App() {
               href="/"
               className="flex items-center space-x-2 text-white font-semibold hover:text-gray-300"
             >
-              <img src={Logo} alt="Logo CariBarang" className='w-10'/>
+              <img src={Logo} alt="Logo CariBarang" className='w-10' />
               <span className='text-2xl'>CariBarang</span>
             </a>
 
             {/* Hamburger Menu for Mobile */}
-            <div className="md:hidden">
+            <div className="flex items-center space-x-2 justify-end md:hidden">
+                {isAuthenticated ? (
+                  <Avatar/>
+                ) : <button className='border border-gray-300 rounded-md px-2 py-1 hover:bg-gray-700' onClick={login}>Login</button>}
               <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="text-gray-300 hover:text-white bg-gray-800 focus:outline-none"
@@ -70,18 +76,26 @@ function App() {
                 <a href="/toko" className="block md:inline hover:text-gray-300 px-4 py-2 md:p-0">Toko</a>
               </li>
             </ul>
-
-            <a
-              href="https://github.com/leo42night/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden md:flex items-center space-x-2 text-gray-300 hover:text-white"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="currentColor" viewBox="0 0 16 16">
-                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.536 2.29 6.562 5.439 7.624..." />
-              </svg>
-              <span>GitHub</span>
-            </a>
+            <ul className='hidden md:flex space-x-4 items-center'>
+              <li className=''>
+                {isAuthenticated ? (
+                  <Avatar/>
+                ) : <button className='border border-gray-300 rounded-md px-2 py-1 hover:bg-gray-700' onClick={login}>Login</button>}
+              </li>
+              <li>
+                <a
+                  href="https://github.com/leo42night/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hidden md:flex items-center space-x-2 text-gray-300 hover:text-white"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.536 2.29 6.562 5.439 7.624..." />
+                  </svg>
+                  <span>GitHub</span>
+                </a>
+              </li>
+            </ul>
           </nav>
         </div>
         {/* Routing */}
@@ -95,5 +109,47 @@ function App() {
     </MyProvider>
   )
 }
+
+const Avatar = () => {
+  const { user, logout } = useAuth();
+  const [isPopupVisible, setIsPopupVisible] = useState<boolean>(false);
+
+  // Membuat inisial dari nama lengkap
+  const getInitials = (name: string | null) => {
+    if (!name) return '';
+    const nameParts = name.split(' ');
+    return nameParts.map(part => part.charAt(0).toUpperCase()).join('');
+  };
+
+  const togglePopup = () => {
+    setIsPopupVisible(!isPopupVisible);
+  };
+
+  return (
+    <div className='relative border border-gray-300 rounded-full p-1'>
+      {/* Avatar Bulat */}
+      <div
+        className="w-8 h-8 flex items-center justify-center bg-blue-500 text-white font-semibold rounded-full cursor-pointer"
+        onClick={togglePopup}
+      >
+        {user ? getInitials(user.displayName) : 'U'}
+      </div>
+
+      {/* Popup */}
+      {isPopupVisible && (
+        <div className="z-10 absolute top-12 right-0 bg-white shadow-lg rounded-lg p-4 min-w-min">
+          <h2 className="text-lg font-semibold text-gray-800">{user?.displayName}</h2>
+          <p className="text-sm text-gray-500">{user?.email}</p>
+          <button
+            className="mt-2 w-full py-1 bg-red-500 text-white rounded hover:bg-red-600"
+            onClick={logout}
+          >
+            Logout
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
 
 export default App

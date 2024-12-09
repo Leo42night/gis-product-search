@@ -12,6 +12,7 @@ import {
 import { db } from "../firebase-config";
 import { APIProvider, Map, Marker, InfoWindow } from "@vis.gl/react-google-maps";
 import { Store } from "../types/types";
+import { useAuth } from "../context/AuthContext";
 
 const DEFAULT_CENTER = JSON.parse(import.meta.env.VITE_CENTER);
 
@@ -22,6 +23,9 @@ interface Transaction {
 
 
 const KelolaToko: React.FC = () => {
+  const { isAuthenticated } = useAuth();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
   const [stores, setStores] = useState<Store[]>([]);
 
   // untuk tambah dan edit
@@ -38,6 +42,19 @@ const KelolaToko: React.FC = () => {
   const [newStore, setNewStore] = useState<Store>({} as Store);
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [openPopup, setOpenPopup] = useState(false);
+
+  // cek autentikasi
+  useEffect(() => {
+    // Simulasi pengecekan autentikasi
+    const checkAuthStatus = async () => {
+      // Tunggu sampai status autentikasi tersedia
+      setTimeout(() => {
+        setIsLoading(false); // Set loading selesai
+      }, 500); // Loading selama 1 detik
+    };
+
+    checkAuthStatus();
+  }, [isAuthenticated]);
 
   // Fungsi untuk mengambil data toko dari Firestore
   const fetchStores = async () => {
@@ -184,9 +201,18 @@ const KelolaToko: React.FC = () => {
     }
   }, [newStore]);
 
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="spinner-border animate-spin rounded-full border-4 border-t-4 border-blue-500 w-16 h-16"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-semibold text-center mb-6">Kelola Toko</h1>
+      <h1 className="text-3xl font-semibold text-center">Daftar Toko</h1>
+      {!isAuthenticated && <p className="text-red-500 text-center mb-4">Silakan login agar dapat akses edit & hapus toko 🙏.</p>}
 
       {/* Tombol Tambah Toko */}
       <div className="mb-4 text-right">
@@ -211,7 +237,9 @@ const KelolaToko: React.FC = () => {
               <th className="py-2 px-4 border-b text-left text-gray-700">Alamat</th>
               <th className="py-2 px-4 border-b text-left text-gray-700">Latitude</th>
               <th className="py-2 px-4 border-b text-left text-gray-700">Longitude</th>
-              <th className="py-2 px-4 border-b text-left text-gray-700">Aksi</th>
+              {isAuthenticated &&
+                <th className="py-2 px-4 border-b text-left text-gray-700">Aksi</th>
+              }
             </tr>
           </thead>
           <tbody>
@@ -221,24 +249,26 @@ const KelolaToko: React.FC = () => {
                 <td className="py-2 px-4 border-b">{store.alamat}</td>
                 <td className="py-2 px-4 border-b">{store.lat}</td>
                 <td className="py-2 px-4 border-b">{store.lng}</td>
-                <td className="py-2 px-4 border-b">
-                  <button
-                    onClick={() => {
-                      setNewStore(store);
-                      setShowModal(true);
-                      setIsEdit(true);
-                    }}
-                    className="text-yellow-500 hover:text-yellow-700 mr-2"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDeleteClick(store.id, store.toko_id)}
-                    className="text-red-500 hover:text-red-700"
-                  >
-                    Hapus
-                  </button>
-                </td>
+                {isAuthenticated &&
+                  <td className="py-2 px-4 border-b">
+                    <button
+                      onClick={() => {
+                        setNewStore(store);
+                        setShowModal(true);
+                        setIsEdit(true);
+                      }}
+                      className="text-yellow-500 hover:text-yellow-700 mr-2"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeleteClick(store.id, store.toko_id)}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      Hapus
+                    </button>
+                  </td>
+                }
               </tr>
             ))}
           </tbody>

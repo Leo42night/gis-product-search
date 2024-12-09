@@ -4,6 +4,7 @@ import { db } from "../firebase-config";
 import { useMyContext } from "../context/MyContext";
 import { Product } from "../types/types";
 import { fetchProducts } from "../libs/firestore";
+import { useAuth } from "../context/AuthContext";
 
 interface Transaction {
   id: string;
@@ -11,6 +12,9 @@ interface Transaction {
 }
 
 const KelolaProduk: React.FC = () => {
+  const { isAuthenticated } = useAuth();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
   const [products, setProducts] = useState<Product[]>([]);
 
   // tambah dan edit
@@ -28,6 +32,19 @@ const KelolaProduk: React.FC = () => {
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
 
   const [isEdit, setIsEdit] = useState<boolean>(false); // Menandakan apakah modal digunakan untuk edit atau tambah
+
+  // cek autentikasi
+  useEffect(() => {
+    // Simulasi pengecekan autentikasi
+    const checkAuthStatus = async () => {
+      // Tunggu sampai status autentikasi tersedia
+      setTimeout(() => {
+        setIsLoading(false); // Set loading selesai
+      }, 500); // Loading selama 0.5 detik
+    };
+
+    checkAuthStatus();
+  }, [isAuthenticated]);
 
   const fetchTransactions = async () => {
     try {
@@ -168,9 +185,18 @@ const KelolaProduk: React.FC = () => {
     }
   }, [newProduct]);
 
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="spinner-border animate-spin rounded-full border-4 border-t-4 border-blue-500 w-16 h-16"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-semibold text-center mb-6">Daftar Produk</h1>
+      <h1 className="text-3xl font-semibold text-center">Daftar Produk</h1>
+      {!isAuthenticated && <p className="text-red-500 text-center mb-4">Silakan login agar dapat akses tambah, edit & hapus produk 🙏.</p>}
 
       {/* Tabel Produk */}
       <div className="mb-4 text-right">
@@ -195,7 +221,9 @@ const KelolaProduk: React.FC = () => {
               <th className="py-2 px-4 border-b text-left text-gray-700">Code</th>
               <th className="py-2 px-4 border-b text-left text-gray-700">Nama</th>
               <th className="py-2 px-4 border-b text-left text-gray-700">Kategori</th>
-              <th className="py-2 px-4 border-b text-left text-gray-700">Aksi</th>
+              {isAuthenticated &&
+                <th className="py-2 px-4 border-b text-left text-gray-700">Aksi</th>
+              }
             </tr>
           </thead>
           <tbody>
@@ -204,20 +232,22 @@ const KelolaProduk: React.FC = () => {
                 <td className="py-2 px-4 border-b">{product.bar}</td>
                 <td className="py-2 px-4 border-b">{product.name}</td>
                 <td className="py-2 px-4 border-b">{product.category}</td>
-                <td className="py-2 px-4 border-b">
-                  <button
-                    onClick={() => editProduct(product)}
-                    className="text-yellow-500 hover:text-yellow-700"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDeleteClick(product.id, product.bar)}
-                    className="text-red-500 hover:text-red-700 ml-2"
-                  >
-                    Hapus
-                  </button>
-                </td>
+                {isAuthenticated &&
+                  <td className="py-2 px-4 border-b">
+                    <button
+                      onClick={() => editProduct(product)}
+                      className="text-yellow-500 hover:text-yellow-700"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeleteClick(product.id, product.bar)}
+                      className="text-red-500 hover:text-red-700 ml-2"
+                    >
+                      Hapus
+                    </button>
+                  </td>
+                }
               </tr>
             ))}
           </tbody>
