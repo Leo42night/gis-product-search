@@ -213,7 +213,7 @@ const Home = () => {
         <div className="flex items-center gap-4 justify-end">
           <button
             onClick={fetchUserLocation}
-            className="px-4 md:py-2 bg-slate-100 border-slate-900 border-2 text-slate-900 rounded-lg"
+            className="px-4 md:py-2 bg-slate-800 border-2 text-slate-100 rounded-lg"
           >
             My Loc 📍
           </button>

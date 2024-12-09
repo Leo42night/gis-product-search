@@ -11,6 +11,7 @@ import { MyProvider } from './context/MyContext';
 import Logo from './images/Logo.svg';
 import './globals.css';
 import { useAuth } from './context/AuthContext';
+import { Github } from './components/Icons';
 
 function App() {
   const [isOpen, setIsOpen] = useState(false);
@@ -89,10 +90,7 @@ function App() {
                   rel="noopener noreferrer"
                   className="hidden md:flex items-center space-x-2 text-gray-300 hover:text-white"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.536 2.29 6.562 5.439 7.624..." />
-                  </svg>
-                  <span>GitHub</span>
+                  <Github />
                 </a>
               </li>
             </ul>
