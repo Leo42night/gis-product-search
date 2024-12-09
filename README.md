@@ -9,7 +9,7 @@ Kalian juga dapat berkontirubusi menambahkan data Produk, data Toko, dan data Lo
 - [Vite React Typescript](https://vite.dev/guide/)
 - UI: 
   - [Tailwind CSS](https://tailwindcss.com/)
-  - [Font Awesome](https://fontawesome.com/)
+  - [Font Awesome](https://fontawesome.com/) (download svg, bukan CDN)
 - API:
   - [mebjas/html5-qrcode](https://github.com/mebjas/html5-qrcode)
   - [@vis.gl/react-google-maps](https://visgl.github.io/react-google-maps/)
