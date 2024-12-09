@@ -196,7 +196,7 @@ const KelolaProduk: React.FC = () => {
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-3xl font-semibold text-center">Daftar Produk</h1>
-      {!isAuthenticated && <p className="text-red-500 text-center mb-4">Silakan login agar dapat akses tambah, edit & hapus produk 🙏.</p>}
+      {!isAuthenticated && <p className="text-red-500 text-center mb-4">Silakan login agar dapat akses edit & hapus produk 🙏.</p>}
 
       {/* Tabel Produk */}
       <div className="mb-4 text-right">
