@@ -11,7 +11,7 @@ import {
   orderBy,
   query,
 } from "firebase/firestore";
-import { db } from "../firebase-config";
+import { db } from "../libs/firebase-config";
 import { Product } from "../types/types";
 import { fetchProducts } from "../libs/firestore";
 import { useAuth } from "../context/AuthContext";

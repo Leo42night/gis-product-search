@@ -1,7 +1,7 @@
 // src/context/AuthContext.tsx
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut, User } from 'firebase/auth';
-import { auth } from '../firebase-config';
+import { auth } from '../libs/firebase-config';
 
 interface AuthContextType {
   isAuthenticated: boolean;

@@ -1,5 +1,5 @@
 import { collection, query, where, getDocs } from "firebase/firestore";
-import { db } from "../firebase-config";
+import { db } from "./firebase-config";
 import { Product, Transaction } from "../types/types";
 
 interface fetchDataParams {

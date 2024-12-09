@@ -9,7 +9,7 @@ import {
   query,
   orderBy,
 } from "firebase/firestore";
-import { db } from "../firebase-config";
+import { db } from "../libs/firebase-config";
 import { APIProvider, Map, Marker, InfoWindow } from "@vis.gl/react-google-maps";
 import { Store } from "../types/types";
 import { useAuth } from "../context/AuthContext";
