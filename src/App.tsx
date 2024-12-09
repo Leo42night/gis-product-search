@@ -9,7 +9,6 @@ import KelolaTransaksi from './page/KelolaTransaksi';
 import KelolaToko from './page/KelolaToko';
 import { MyProvider } from './context/MyContext';
 import Logo from './images/Logo.svg';
-
 import './globals.css';
 
 function App() {
