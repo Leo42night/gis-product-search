@@ -21,7 +21,6 @@
     "react-router-dom": "^7.0.1"
   },
   "devDependencies": {
-    "@C": "^9.9.0",
     "@types/google.maps": "^3.58.1",
     "@types/lodash": "^4.17.13",
     "@types/node": "^22.10.1",
