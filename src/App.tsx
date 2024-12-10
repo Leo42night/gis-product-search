@@ -3,10 +3,10 @@ passiveSupport({ debug: false });
 import { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
-import Home from './page/Home';
-import KelolaProduk from './page/KelolaProduk';
-import KelolaTransaksi from './page/KelolaTransaksi';
-import KelolaToko from './page/KelolaToko';
+import Home from './pages/Home';
+import KelolaProduk from './pages/KelolaProduk';
+import KelolaTransaksi from './pages/KelolaTransaksi';
+import KelolaToko from './pages/KelolaToko';
 import { MyProvider } from './context/MyContext';
 import Logo from './images/Logo.svg';
 import './globals.css';
