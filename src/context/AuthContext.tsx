@@ -8,6 +8,7 @@ interface AuthContextType {
   user: User | null;
   login: () => void;
   logout: () => void;
+  isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -15,6 +16,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -23,6 +25,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     });
     return unsubscribe;
   }, []);
+
+  // cek autentikasi
+    useEffect(() => {
+      // Simulasi pengecekan autentikasi
+      const checkAuthStatus = async () => {
+        // Tunggu sampai status autentikasi tersedia
+        setTimeout(() => {
+          setIsLoading(false); // Set loading selesai
+        }, 500); // Loading selama 1 detik
+      };
+  
+      checkAuthStatus();
+    }, [isAuthenticated]);
 
   const login = () => {
     const provider = new GoogleAuthProvider();
@@ -34,7 +49,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

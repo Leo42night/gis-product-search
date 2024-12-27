@@ -23,7 +23,7 @@ const Home = () => {
 
   const { scannedValue, updateScannedValue } = useMyContext();
 
-  const [productName, setProductName] = useState<string>("");
+  const [productName, setProductName] = useState<string>(""); // ditampilkan ketika terdetect
   const [productID, setProductID] = useState<string>("1111122222333");
 
   // center for the map

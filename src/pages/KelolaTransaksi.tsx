@@ -42,8 +42,7 @@ const templateTransaction = {
 const now = new Date();
 
 const KelolaTransaksi: React.FC = () => {
-  const { isAuthenticated } = useAuth();
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { isAuthenticated, isLoading } = useAuth();
 
   const [products, setProducts] = useState<Product[]>([]);
   const [stores, setStores] = useState<StoreInfo[]>([]);
@@ -58,19 +57,6 @@ const KelolaTransaksi: React.FC = () => {
   // untuk delete
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
   const [selectedTransactId, setSelectedTransactId] = useState<string | null>(null);
-
-  // cek autentikasi
-  useEffect(() => {
-    // Simulasi pengecekan autentikasi
-    const checkAuthStatus = async () => {
-      // Tunggu sampai status autentikasi tersedia
-      setTimeout(() => {
-        setIsLoading(false); // Set loading selesai
-      }, 500); // Loading selama 0.5 detik
-    };
-
-    checkAuthStatus();
-  }, [isAuthenticated]);
 
   // Fungsi untuk mengambil data toko
   const fetchStores = async () => {

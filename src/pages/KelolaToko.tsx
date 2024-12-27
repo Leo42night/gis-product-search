@@ -23,8 +23,7 @@ interface Transaction {
 
 
 const KelolaToko: React.FC = () => {
-  const { isAuthenticated } = useAuth();
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { isAuthenticated, isLoading } = useAuth();
 
   const [stores, setStores] = useState<Store[]>([]);
 
@@ -43,18 +42,7 @@ const KelolaToko: React.FC = () => {
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [openPopup, setOpenPopup] = useState(false);
 
-  // cek autentikasi
-  useEffect(() => {
-    // Simulasi pengecekan autentikasi
-    const checkAuthStatus = async () => {
-      // Tunggu sampai status autentikasi tersedia
-      setTimeout(() => {
-        setIsLoading(false); // Set loading selesai
-      }, 500); // Loading selama 1 detik
-    };
-
-    checkAuthStatus();
-  }, [isAuthenticated]);
+  
 
   // Fungsi untuk mengambil data toko dari Firestore
   const fetchStores = async () => {
