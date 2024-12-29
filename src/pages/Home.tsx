@@ -22,6 +22,9 @@ const Home = () => {
   const navigate = useNavigate();
 
   const { scannedValue, updateScannedValue } = useMyContext();
+  const [scan, setScan] = useState(false); // melakukan scanning
+  const [radiusChange, setRadiusChange] = useState(false); // modal radius
+
 
   const [productName, setProductName] = useState<string>(""); // ditampilkan ketika terdetect
   const [productID, setProductID] = useState<string>("1111122222333");
@@ -122,7 +125,7 @@ const Home = () => {
       // jika data transaksi ada
       if (Array.isArray(data)) {
         if (data.length === 0) {
-          alert("Data transaksi tidak ditemukan di database");
+          alert("Riwayat transaksi tidak ditemukan di Database");
           return;
         }
         setPois(data);
@@ -163,17 +166,51 @@ const Home = () => {
       <div>
         <div>
           <h1 className="text-2xl font-bold mb-4">Home Page</h1>
-          <Scanner />
-          {scannedValue && (
-            <h2 className="text-green-500 font-semibold text-lg mt-2">Scan Berhasil 😎</h2>
+          <button onClick={() => setScan(!scan)} className="md:px-4 md:py-2 bg-slate-800 border-2 text-slate-100 rounded-lg">Scan Kode</button>
+          {scan && (
+            <Scanner />
           )}
+          {scannedValue && (
+            <span className="text-green-500 font-semibold text-lg mt-2">Scan Berhasil 😎</span>
+          )}
+          {/* Radius Input */}
+          <button onClick={() => setRadiusChange(!radiusChange)} className="md:px-4 md:py-2 bg-slate-800 border-2 text-slate-100 rounded-lg">Set Radius</button>
+          {radiusChange && (
+            <div className="mb-4">
+              <div className="flex flex-row justify-between items-center">
+                <label htmlFor="radius" className="block text-gray-700">
+                  Radius (meters):
+                </label>
+                <span className="text-gray-800 font-medium">{radius} meters</span>
+
+              </div>
+              <div className="flex flex-col md:flex-row items-center gap-4">
+                <input
+                  id="radius"
+                  type="range"
+                  min="500"
+                  max="10000"
+                  step="10"
+                  value={radius}
+                  onChange={(e) => setRadius(Number(e.target.value))}
+                  className="w-full mt-2"
+                />
+              </div>
+            </div>
+          )}
+          <button
+            onClick={fetchUserLocation}
+            className="md:px-4 md:py-2 bg-slate-800 border-2 text-slate-100 rounded-lg"
+          >
+            My Loc 📍
+          </button>
         </div>
         {/* Input Product ID */}
-        <div className="my-4 flex flex-col md:flex-row items-start md:items-center gap-4">
-          <label htmlFor="productID" className="block text-gray-700 flex-shrink-0">
+        <div className="my-4 flex items-center md:items-center gap-4">
+          <label htmlFor="productID" className="text-gray-700 flex-shrink-0">
             Product ID:
           </label>
-          <div className="flex items-center gap-2 justify-between me-6">
+          <div className="flex items-center gap-2 justify-between md:me-6">
             <input
               id="productID"
               type="number"
@@ -188,38 +225,12 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Radius Input */}
-        <div className="mb-4">
-          <div className="flex flex-row justify-between items-center">
-            <label htmlFor="radius" className="block text-gray-700">
-              Radius (meters):
-            </label>
-            <span className="text-gray-800 font-medium">{radius} meters</span>
 
-          </div>
-          <div className="flex flex-col md:flex-row items-center gap-4">
-            <input
-              id="radius"
-              type="range"
-              min="500"
-              max="10000"
-              step="10"
-              value={radius}
-              onChange={(e) => setRadius(Number(e.target.value))}
-              className="w-full mt-2"
-            />
-          </div>
-        </div>
         <div className="flex items-center gap-4 justify-end">
-          <button
-            onClick={fetchUserLocation}
-            className="px-4 md:py-2 bg-slate-800 border-2 text-slate-100 rounded-lg"
-          >
-            My Loc 📍
-          </button>
+
           <button
             onClick={handleSubmit}
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           >
             Submit
           </button>

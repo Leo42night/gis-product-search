@@ -1,4 +1,4 @@
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs, doc, updateDoc, deleteDoc } from "firebase/firestore";
 import { db } from "./firebase-config";
 import { Product, Transaction } from "../types/types";
 
@@ -53,7 +53,7 @@ export const fetchData = async ({ prodId, setProductName }: fetchDataParams): Pr
   return fetchedTransactions;
 };
 
-export const fetchProducts = async (setProducts: React.Dispatch<React.SetStateAction<Product[]>>) => {
+export async function fetchProducts(setProducts: React.Dispatch<React.SetStateAction<Product[]>>) {
   try {
     const querySnapshot = await getDocs(collection(db, "produk"));
     const productsData: Product[] = [];
@@ -72,3 +72,26 @@ export const fetchProducts = async (setProducts: React.Dispatch<React.SetStateAc
   }
 };
 
+export async function updateProduct(id: string, name: string, category: string) {
+  try {
+    const productRef = doc(db, "produk", id);
+    await updateDoc(productRef, { name: name, category: category });
+  } catch (error) {
+    console.error("Error updating product:", error);
+  }
+};
+
+export async function deleteProduct(id: string) {
+  try {
+    const productRef = doc(db, "produk", id);
+    await deleteDoc(productRef);
+  } catch (error) {
+    console.error("Error deleting product:", error);
+  }
+};
+
+export async function getCountTransaksiProduk(prodId: string) {
+  const q = query(collection(db, "transaksi"), where("prod_id", "==", prodId));
+  const querySnapshot = await getDocs(q);
+  return querySnapshot.size;
+}

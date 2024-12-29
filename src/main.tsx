@@ -1,4 +1,4 @@
-import { StrictMode } from 'react';
+// import { StrictMode } from 'react'; dimatikan karena mengganggu scanner
 import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import { AuthProvider } from './context/AuthContext.tsx';
@@ -20,13 +20,12 @@ console.warn = (...args) => {
   originalWarn(...args);
 };
 
-
 // chrome://flags -> Enable reporting of usage hints in the console = false (untuk menutup pesan [Violation]) 
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
     <AuthProvider>
       <App />
     </AuthProvider>
-  </StrictMode>,
+  // <StrictMode>
+  // </StrictMode>,
 )

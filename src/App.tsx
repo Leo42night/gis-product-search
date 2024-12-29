@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import Home from './pages/Home';
-import KelolaProduk from './pages/KelolaProduk';
+import KelolaProduk from './pages/produk/KelolaProduk';
 import KelolaTransaksi from './pages/KelolaTransaksi';
 import KelolaToko from './pages/KelolaToko';
 import { MyProvider } from './context/MyContext';

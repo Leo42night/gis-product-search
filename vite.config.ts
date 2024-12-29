@@ -8,6 +8,11 @@ dotenv.config();
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
   server: {
     https: process.env.VITE_NODE_ENV === 'development' ? {
       key: fs.readFileSync(path.resolve(__dirname, 'myapp-privateKey.key')),
