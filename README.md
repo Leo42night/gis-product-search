@@ -9,6 +9,7 @@ Kalian juga dapat berkontirubusi menambahkan data Produk, data Toko, dan data Lo
 - [Vite React Typescript](https://vite.dev/guide/)
 - UI: 
   - [Tailwind CSS](https://tailwindcss.com/)
+  - [ShadCN/UI](https://ui.shadcn.com/)
   - [Font Awesome](https://fontawesome.com/) (download svg, bukan CDN)
 - API:
   - [mebjas/html5-qrcode](https://github.com/mebjas/html5-qrcode)
@@ -37,8 +38,8 @@ Dengan tujuan memenuhi tugas mata kuliah Sistem Informasi Geografi Lanjut
   - VITE_FIREBASE_APP_ID
 - gunakan folder `dist/`, karena disitu tempat build vite.
 - sesuaikan setingan github action dengan file `firebase-hosting-merge.yml` dan `firebase-hosting-pull-request.yml`. 
-- setelah init selesai lakukan commit perubahan dan push ke repo. lalu ketika push setelahnya github action akan dijalankan untuk build dan depoy otomatis
-<br/> <i>-- kondisi 2 : Langsung Deploy ke firesbase hosting  --</i>
+- setelah init selesai lakukan commit perubahan dan push ke repo. lalu ketika push setelahnya github action akan dijalankan untuk build dan depoy otomatis.
+<br/><br/> <i>-- kondisi 2 : Langsung Deploy ke firesbase hosting  --</i>
 - setelah langkah 4, pilih juga layanan `hosting`, lalu jangan pilih integrasi dengan github.
 - gunakan folder `dist/`
 - setelah selesai konfirgurasi jalankan `pnpm run build` untuk build ke distro, kemudia jalankan `firebase deploy` untuk publish ke hosting firebase. 
